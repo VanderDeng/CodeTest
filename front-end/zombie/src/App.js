@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import {
   ChakraProvider,
+  Heading,
   Box,
   Grid,
   Container,
@@ -16,7 +17,7 @@ import {
   NumberDecrementStepper,
 } from '@chakra-ui/react';
 import axios from 'axios';
-import Board from './Board';
+import Map from './Map';
 
 function App() {
   const [gridSize, setGridSize] = React.useState('0');
@@ -26,9 +27,9 @@ function App() {
     commands: '',
   });
   const [display, setDisplay] = React.useState('');
-  const [border, setBorder] = React.useState(Array(20).fill(null));
   const handleChange = event =>
     setAllValues({ ...allValues, [event.target.name]: event.target.value });
+  const childRef = useRef();
 
   const service = axios.create({
     baseURL: 'http://localhost:8080',
@@ -44,20 +45,21 @@ function App() {
       creatures: creatures,
       ...allValues,
     };
-
     console.log(params);
-
+    childRef.current.setMap(gridSize);
     service.get('/test').then(res => setDisplay(res.data));
   }
 
   return (
     <ChakraProvider theme={theme}>
+      <Heading as="h2" textAlign="center" padding={5}>
+        Zombie Apocalypse
+      </Heading>
       <Box textAlign="center" fontSize="xl">
         <Grid
           minH="20vh"
           marginLeft={300}
           paddingRight={300}
-          paddingTop={100}
           paddingBottom={10}
         >
           <FormControl isRequired>
@@ -105,13 +107,12 @@ function App() {
         <Button colorScheme="teal" onClick={submitOpt}>
           Submit
         </Button>
+        <div style={{ marginTop: '20px' }}>
+          <Container maxW="container.sm">
+            <Map ref={childRef} />
+          </Container>
+        </div>
       </Box>
-      <div style={{ marginTop: '20px' }}>
-        <Container maxW="container.sm">
-          Display:{display}
-          <Board />
-        </Container>
-      </div>
     </ChakraProvider>
   );
 }
