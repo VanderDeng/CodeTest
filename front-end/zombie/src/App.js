@@ -3,22 +3,30 @@ import {
   ChakraProvider,
   Box,
   Grid,
+  Container,
   theme,
   FormControl,
   FormLabel,
   Input,
   Button,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
+  NumberIncrementStepper,
+  NumberDecrementStepper,
 } from '@chakra-ui/react';
-import { ColorModeSwitcher } from './ColorModeSwitcher';
 import axios from 'axios';
+import Board from './Board';
 
 function App() {
+  const [gridSize, setGridSize] = React.useState('0');
+  const [zombie, setZombie] = React.useState('0');
+  const [creatures, setCreatures] = React.useState('0');
   const [allValues, setAllValues] = React.useState({
-    gridSize: '',
-    zombie: '',
-    creatures: '',
     commands: '',
   });
+  const [display, setDisplay] = React.useState('');
+  const [border, setBorder] = React.useState(Array(20).fill(null));
   const handleChange = event =>
     setAllValues({ ...allValues, [event.target.name]: event.target.value });
 
@@ -30,36 +38,62 @@ function App() {
   });
 
   function submitOpt() {
-    service.get('/getPosition').then(res => {
-      console.log(res);
-    });
-    console.log(allValues);
+    let params = {
+      gridSize: gridSize,
+      zombie: zombie,
+      creatures: creatures,
+      ...allValues,
+    };
+
+    console.log(params);
+
+    service.get('/test').then(res => setDisplay(res.data));
   }
 
   return (
     <ChakraProvider theme={theme}>
       <Box textAlign="center" fontSize="xl">
-        <Grid minH="20vh" p={100}>
-          <ColorModeSwitcher justifySelf="flex-end" />
+        <Grid
+          minH="20vh"
+          marginLeft={300}
+          paddingRight={300}
+          paddingTop={100}
+          paddingBottom={10}
+        >
           <FormControl isRequired>
             <FormLabel>Dimensions of the grid</FormLabel>
-            <Input
-              name="gridSize"
-              onChange={handleChange}
-              placeholder="Input dimensions of the grid"
-            />
+            <NumberInput
+              onChange={valueString => setGridSize(valueString)}
+              value={gridSize}
+            >
+              <NumberInputField />
+              <NumberInputStepper>
+                <NumberIncrementStepper />
+                <NumberDecrementStepper />
+              </NumberInputStepper>
+            </NumberInput>
             <FormLabel>Zombie Initial position</FormLabel>
-            <Input
-              name="zombie"
-              onChange={handleChange}
-              placeholder="Input the initial position of the zombie"
-            />
+            <NumberInput
+              onChange={valueString => setZombie(valueString)}
+              value={zombie}
+            >
+              <NumberInputField />
+              <NumberInputStepper>
+                <NumberIncrementStepper />
+                <NumberDecrementStepper />
+              </NumberInputStepper>
+            </NumberInput>
             <FormLabel>Creatures Initial position</FormLabel>
-            <Input
-              name="creatures"
-              onChange={handleChange}
-              placeholder="Input a list of initial positions of the creatures"
-            />
+            <NumberInput
+              onChange={valueString => setCreatures(valueString)}
+              value={creatures}
+            >
+              <NumberInputField />
+              <NumberInputStepper>
+                <NumberIncrementStepper />
+                <NumberDecrementStepper />
+              </NumberInputStepper>
+            </NumberInput>
             <FormLabel>Movement List</FormLabel>
             <Input
               name="commands"
@@ -72,6 +106,12 @@ function App() {
           Submit
         </Button>
       </Box>
+      <div style={{ marginTop: '20px' }}>
+        <Container maxW="container.sm">
+          Display:{display}
+          <Board />
+        </Container>
+      </div>
     </ChakraProvider>
   );
 }
