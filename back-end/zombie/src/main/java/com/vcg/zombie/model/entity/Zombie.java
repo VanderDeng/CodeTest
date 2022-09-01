@@ -2,30 +2,28 @@ package com.vcg.zombie.model.entity;
 
 public class Zombie extends Creatures {
 
+    private String x;
+    private String y;
 
-    public Zombie() {
-       new Zombie("0","0");
+    public Zombie(String x, String y) {
+        this.x = x;
+        this.y = y;
     }
 
-    public Zombie(String positionX, String positionY) {
-        this.positionX = positionX;
-        this.positionY = positionY;
+    public String getX() {
+        return x;
     }
 
-    public String getPositionX() {
-        return positionX;
+    public void setX(String x) {
+        this.y = x;
     }
 
-    public void setPositionX(String positionX) {
-        this.positionX = positionX;
+    public String getY() {
+        return y;
     }
 
-    public String getPositionY() {
-        return positionY;
-    }
-
-    public void setPositionY(String positionY) {
-        this.positionY = positionY;
+    public void setY(String y) {
+        this.y = y;
     }
 
     public void infectCreatures(){

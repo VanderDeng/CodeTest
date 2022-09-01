@@ -8,6 +8,7 @@ import com.vcg.zombie.service.PositionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.awt.*;
 
 
 @RestController
@@ -31,8 +32,8 @@ public class PositionController {
     @CrossOrigin(origins = {"http://localhost:3000", "null"})
     @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(value = "/createPosition", method = RequestMethod.POST)
-    public finalPosition create(@RequestBody Position position) {
-        finalPosition newPosition = PositionService.create(position);
+    public Position create(@RequestBody Position position) {
+        Position newPosition = PositionService.create(position);
         return newPosition;
     }
 
