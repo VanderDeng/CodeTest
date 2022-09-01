@@ -19,7 +19,6 @@ import {
   Alert,
   AlertIcon,
   AlertTitle,
-  AlertDescription,
 } from '@chakra-ui/react';
 import axios from 'axios';
 import Map from './components/Map';
@@ -63,7 +62,7 @@ function App() {
 
     if (checkValid(params)) {
       childRef.current.setMap(gridSize);
-      service.get('/test').then(res => {
+      service.post('/test', params).then(res => {
         if (
           !Object.prototype.isPrototypeOf(res) &&
           Object.keys(res).length === 0
@@ -96,12 +95,30 @@ function App() {
         message: 'You have to input all parameters',
       });
       return false;
+    } else if (checkDup(params.creatures)) {
+      setVisible({
+        isVisible: true,
+        message: 'Creatures position are duplicated',
+      });
+      return false;
     } else {
       setVisible({
         ...visibleData,
         isVisible: false,
       });
       return true;
+    }
+  }
+
+  function checkDup(arr) {
+    const xlist = arr.map(value => value.x);
+    const xset = new Set(xlist);
+    const ylist = arr.map(value => value.y);
+    const yset = new Set(ylist);
+    if (xset.size !== xlist.length && yset.size !== ylist.length) {
+      return true;
+    } else {
+      return false;
     }
   }
 
