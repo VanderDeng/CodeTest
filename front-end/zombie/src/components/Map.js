@@ -13,7 +13,8 @@ const Map = forwardRef((props, ref) => {
   useImperativeHandle(ref, () => ({
     setMap(num, mapData) {
       setDimension(num);
-      format(mapData);
+      setZombie(mapData.zombies);
+      setCreature(mapData.creatures);
     },
   }));
 
@@ -37,7 +38,7 @@ const Map = forwardRef((props, ref) => {
     marginTop: '20px',
     boxShadow: `0px 10px 10px rgba(0,0,0,0.1)`,
   };
-  const zombie = {
+  const zombieStyle = {
     width: '100px',
     height: '100px',
     backgroundImage: `url(${myZombie})`,
@@ -45,7 +46,7 @@ const Map = forwardRef((props, ref) => {
     margin: 'auto',
     lineHeight: '100px',
   };
-  const creature = {
+  const creatureStyle = {
     width: '100px',
     height: '100px',
     backgroundImage: `url(${myPirate})`,
@@ -54,14 +55,7 @@ const Map = forwardRef((props, ref) => {
     lineHeight: '100px',
   };
 
-  function format(data) {
-    const zombieList = data.zombies;
-    const creatureList = data.creatures;
-    setZombie(zombieList);
-    setCreature(creatureList);
-  }
-
-  const makeMap = () => {
+  const createMap = () => {
     let arr = [];
     for (let i = 0; i < dimension; i++) {
       let temp = [];
@@ -77,7 +71,7 @@ const Map = forwardRef((props, ref) => {
             })
             .includes(true)
         ) {
-          temp.push(<div style={zombie} key={i + ',' + j}></div>);
+          temp.push(<div style={zombieStyle} key={i + ',' + j}></div>);
         } else if (
           creatures
             .map(item => {
@@ -89,7 +83,7 @@ const Map = forwardRef((props, ref) => {
             })
             .includes(true)
         ) {
-          temp.push(<div style={creature} key={i + ',' + j}></div>);
+          temp.push(<div style={creatureStyle} key={i + ',' + j}></div>);
         } else {
           temp.push(<div style={block} key={i + ',' + j}></div>);
         }
@@ -101,7 +95,7 @@ const Map = forwardRef((props, ref) => {
   };
 
   useEffect(() => {
-    makeMap(dimension);
+    createMap(dimension);
   }, [dimension]);
 
   return (

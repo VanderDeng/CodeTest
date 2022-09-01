@@ -24,6 +24,8 @@ import axios from 'axios';
 import Map from './components/Map';
 
 function App() {
+  const mapRef = useRef();
+
   const [gridSize, setGridSize] = React.useState('');
   const [zombieX, setZombieX] = React.useState('');
   const [zombieY, setZombieY] = React.useState('');
@@ -31,14 +33,13 @@ function App() {
     commands: '',
   });
   const [creatureList, setList] = React.useState([{ x: '', y: '' }]);
-
-  const handleChange = event =>
-    setAllValues({ ...allValues, [event.target.name]: event.target.value });
-  const childRef = useRef();
   const [visibleData, setVisible] = React.useState({
     isVisible: false,
     message: 'You have to input all parameters',
   });
+
+  const commChange = event =>
+    setAllValues({ ...allValues, [event.target.name]: event.target.value });
 
   const data = {
     zombies: [
@@ -51,11 +52,10 @@ function App() {
       { x: '2', y: '2' },
     ],
   };
-  //   const [display, setDisplay] = React.useState('');
 
   const service = axios.create({
     baseURL: 'http://localhost:8080',
-    timeout: 1000,
+    timeout: 2000,
     headers: { 'Access-Control-Allow-Origin': '*' },
     withCredentials: false,
   });
@@ -72,13 +72,12 @@ function App() {
     };
 
     if (checkValid(params)) {
-      childRef.current.setMap(gridSize, data);
+      mapRef.current.setMap(gridSize, data);
       service.post('/createPosition', params).then(res => {
         if (
           !Object.prototype.isPrototypeOf(res) &&
           Object.keys(res).length === 0
         ) {
-          //   setDisplay(res.data);
         } else {
           setVisible({
             isVisible: true,
@@ -164,6 +163,8 @@ function App() {
               onChange={valueString => setGridSize(valueString)}
               value={gridSize}
               marginBottom={5}
+              min={0}
+              isRequired={true}
             >
               <NumberInputField />
               <NumberInputStepper>
@@ -178,6 +179,8 @@ function App() {
                 onChange={valueString => setZombieX(valueString)}
                 value={zombieX}
                 marginBottom={5}
+                min={0}
+                max={gridSize}
               >
                 <NumberInputField />
                 <NumberInputStepper>
@@ -189,6 +192,8 @@ function App() {
                 onChange={valueString => setZombieY(valueString)}
                 value={zombieY}
                 marginBottom={5}
+                min={0}
+                max={gridSize}
               >
                 <NumberInputField />
                 <NumberInputStepper>
@@ -204,6 +209,8 @@ function App() {
               return (
                 <Stack shouldWrapChildren direction="row" key={index}>
                   <NumberInput
+                    min={0}
+                    max={gridSize}
                     value={x}
                     marginBottom={5}
                     onChange={valueAsString => {
@@ -222,6 +229,8 @@ function App() {
                     </NumberInputStepper>
                   </NumberInput>
                   <NumberInput
+                    min={0}
+                    max={gridSize}
                     value={y}
                     marginBottom={5}
                     onChange={valueAsString => {
@@ -269,7 +278,7 @@ function App() {
             <FormLabel>Movement List</FormLabel>
             <Input
               name="commands"
-              onChange={handleChange}
+              onChange={commChange}
               placeholder="Input a list of moves the zombies will make"
             />
           </FormControl>
@@ -280,7 +289,7 @@ function App() {
 
         <div style={{ marginTop: '20px' }}>
           <Container maxW="container.sm">
-            <Map ref={childRef} />
+            <Map ref={mapRef} />
           </Container>
         </div>
       </Box>
