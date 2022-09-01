@@ -1,4 +1,4 @@
-package com.vcg.zombie.model.entity;
+package com.vcg.zombie.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -6,26 +6,23 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
-import java.util.ArrayList;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class Position implements Serializable {
+public class World implements Serializable {
 
     @NotBlank
-    private String gridSize;
+    public int gridSize;
 
     @NotBlank
     private Zombie zombie;
 
     @NotBlank
-    private Zombie[] creatures;
+    private List<Human> creatures;
 
     @NotBlank
     private String commands;
-
-
-
 }
 
