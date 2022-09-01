@@ -40,6 +40,17 @@ function App() {
     message: 'You have to input all parameters',
   });
 
+  const data = {
+    zombies: [
+      { x: '1', y: '2' },
+      { x: '2', y: '3' },
+      { x: '3', y: '4' },
+    ],
+    creatures: [
+      { x: '1', y: '1' },
+      { x: '2', y: '2' },
+    ],
+  };
   //   const [display, setDisplay] = React.useState('');
 
   const service = axios.create({
@@ -61,7 +72,7 @@ function App() {
     };
 
     if (checkValid(params)) {
-      childRef.current.setMap(gridSize);
+      childRef.current.setMap(gridSize, data);
       service.post('/createPosition', params).then(res => {
         if (
           !Object.prototype.isPrototypeOf(res) &&

@@ -11,8 +11,7 @@ import java.util.stream.Stream;
 public interface PositionService {
 
     static Position create(Position position) {
-//        finalPosition newPosition = new finalPosition(Zombie("1","2"),"12344444444");
-//        return newPosition;
+
         System.out.println(position);
         System.out.println(position.getZombie().getX());
         System.out.println(position.getZombie().getY());
