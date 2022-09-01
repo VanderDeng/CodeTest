@@ -1,6 +1,7 @@
 package com.vcg.zombie.controller;
 
 import com.vcg.zombie.model.entity.Position;
+import com.vcg.zombie.model.entity.Zombie;
 import com.vcg.zombie.model.entity.finalPosition;
 import com.vcg.zombie.service.PositionService;
 

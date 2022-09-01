@@ -7,7 +7,6 @@ public class Zombie extends Creatures {
        new Zombie("0","0");
     }
 
-
     public Zombie(String positionX, String positionY) {
         this.positionX = positionX;
         this.positionY = positionY;

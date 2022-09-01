@@ -13,20 +13,14 @@ import java.util.ArrayList;
 @Data
 public class Position implements Serializable {
 
-//    class Zombie {
-//        public String x;
-//        public String y;
-//    }
-
-
     @NotBlank
     private String gridSize;
 
     @NotBlank
-
+    private Zombie zombie;
 
     @NotBlank
-    private String creatures;
+    private Zombie[] creatures;
 
     @NotBlank
     private String commands;
