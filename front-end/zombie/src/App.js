@@ -16,9 +16,13 @@ import {
   NumberInputStepper,
   NumberIncrementStepper,
   NumberDecrementStepper,
+  Alert,
+  AlertIcon,
+  AlertTitle,
+  AlertDescription,
 } from '@chakra-ui/react';
 import axios from 'axios';
-import Map from './Map';
+import Map from './components/Map';
 
 function App() {
   const [gridSize, setGridSize] = React.useState('');
@@ -27,11 +31,17 @@ function App() {
   const [allValues, setAllValues] = React.useState({
     commands: '',
   });
-  const [display, setDisplay] = React.useState('');
   const [creatureList, setList] = React.useState([{ x: '', y: '' }]);
+
   const handleChange = event =>
     setAllValues({ ...allValues, [event.target.name]: event.target.value });
   const childRef = useRef();
+  const [visibleData, setVisible] = React.useState({
+    isVisible: false,
+    message: 'You have to input all parameters',
+  });
+
+  const [display, setDisplay] = React.useState('');
 
   const service = axios.create({
     baseURL: 'http://localhost:8080',
@@ -50,9 +60,49 @@ function App() {
       creatures: creatureList,
       ...allValues,
     };
-    console.log(params);
-    childRef.current.setMap(gridSize);
-    service.get('/test').then(res => setDisplay(res.data));
+
+    if (checkValid(params)) {
+      childRef.current.setMap(gridSize);
+      service.get('/test').then(res => {
+        if (
+          !Object.prototype.isPrototypeOf(res) &&
+          Object.keys(res).length === 0
+        ) {
+          setDisplay(res.data);
+        } else {
+          setVisible({
+            isVisible: true,
+            message: 'response data error',
+          });
+        }
+      });
+    }
+  }
+
+  function checkValid(params) {
+    if (
+      !params.gridSize ||
+      !params.commands ||
+      params.zombie.x === '' ||
+      params.zombie.y === '' ||
+      params.creatures
+        .map(element => {
+          return element.x !== '' && element.y !== '';
+        })
+        .includes(false)
+    ) {
+      setVisible({
+        isVisible: true,
+        message: 'You have to input all parameters',
+      });
+      return false;
+    } else {
+      setVisible({
+        ...visibleData,
+        isVisible: false,
+      });
+      return true;
+    }
   }
 
   React.useEffect(() => {
@@ -71,6 +121,14 @@ function App() {
           paddingRight={300}
           paddingBottom={10}
         >
+          {visibleData.isVisible ? (
+            <Alert status="error">
+              <AlertIcon />
+              <AlertTitle>{visibleData.message}</AlertTitle>
+            </Alert>
+          ) : (
+            ''
+          )}
           <FormControl isRequired>
             {/* Dimensions */}
             <FormLabel>Dimensions of the grid</FormLabel>
@@ -191,6 +249,7 @@ function App() {
         <Button colorScheme="teal" onClick={submitOpt}>
           Submit
         </Button>
+
         <div style={{ marginTop: '20px' }}>
           <Container maxW="container.sm">
             <Map ref={childRef} />
