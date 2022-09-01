@@ -40,7 +40,7 @@ function App() {
     message: 'You have to input all parameters',
   });
 
-  const [display, setDisplay] = React.useState('');
+  //   const [display, setDisplay] = React.useState('');
 
   const service = axios.create({
     baseURL: 'http://localhost:8080',
@@ -62,12 +62,12 @@ function App() {
 
     if (checkValid(params)) {
       childRef.current.setMap(gridSize);
-      service.post('/test', params).then(res => {
+      service.post('/createPosition', params).then(res => {
         if (
           !Object.prototype.isPrototypeOf(res) &&
           Object.keys(res).length === 0
         ) {
-          setDisplay(res.data);
+          //   setDisplay(res.data);
         } else {
           setVisible({
             isVisible: true,
@@ -111,11 +111,11 @@ function App() {
   }
 
   function checkDup(arr) {
-    const xlist = arr.map(value => value.x);
-    const xset = new Set(xlist);
-    const ylist = arr.map(value => value.y);
-    const yset = new Set(ylist);
-    if (xset.size !== xlist.length && yset.size !== ylist.length) {
+    const xList = arr.map(value => value.x);
+    const xSet = new Set(xList);
+    const yList = arr.map(value => value.y);
+    const ySet = new Set(yList);
+    if (xSet.size !== xList.length && ySet.size !== yList.length) {
       return true;
     } else {
       return false;
@@ -124,7 +124,7 @@ function App() {
 
   React.useEffect(() => {
     setList(creatureList);
-  }, []);
+  }, [creatureList]);
 
   return (
     <ChakraProvider theme={theme}>
