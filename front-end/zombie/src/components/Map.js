@@ -1,9 +1,4 @@
-import React, {
-  useState,
-  useEffect,
-  forwardRef,
-  useImperativeHandle,
-} from 'react';
+import React, { useState, forwardRef, useImperativeHandle } from 'react';
 import { Heading } from '@chakra-ui/react';
 import './index.css';
 import myZombie from '../assets/zombie.svg';
@@ -13,15 +8,12 @@ const Map = forwardRef((props, ref) => {
   useImperativeHandle(ref, () => ({
     setMap(num, mapData) {
       setDimension(num);
-      setZombie(mapData.zombies);
-      setCreature(mapData.creatures);
+      createMap(num, mapData);
     },
   }));
 
   const [dimension, setDimension] = useState(0);
   const [position, setPosition] = useState([]);
-  const [zombies, setZombie] = useState({});
-  const [creatures, setCreature] = useState({});
 
   const block = {
     width: '100px',
@@ -55,15 +47,16 @@ const Map = forwardRef((props, ref) => {
     lineHeight: '100px',
   };
 
-  const createMap = () => {
+  const createMap = (num, mapData) => {
     let arr = [];
-    for (let i = 0; i < dimension; i++) {
+    for (let i = 0; i < num; i++) {
       let temp = [];
-      for (let j = 0; j < dimension; j++) {
+      for (let j = 0; j < num; j++) {
         if (
-          zombies
+          mapData.zombies
             .map(item => {
-              if (item.x === i.toString() && item.y === j.toString()) {
+              console.log();
+              if (item.x === i && item.y === j) {
                 return true;
               } else {
                 return false;
@@ -73,9 +66,9 @@ const Map = forwardRef((props, ref) => {
         ) {
           temp.push(<div style={zombieStyle} key={i + ',' + j}></div>);
         } else if (
-          creatures
+          mapData.creatures
             .map(item => {
-              if (item.x === i.toString() && item.y === j.toString()) {
+              if (item.x === i && item.y === j) {
                 return true;
               } else {
                 return false;
@@ -93,10 +86,6 @@ const Map = forwardRef((props, ref) => {
 
     setPosition(arr);
   };
-
-  useEffect(() => {
-    createMap(dimension);
-  }, [dimension]);
 
   return (
     <div className="gridMap">

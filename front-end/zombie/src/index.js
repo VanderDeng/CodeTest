@@ -4,7 +4,6 @@ import App from './App';
 
 import reportWebVitals from './reportWebVitals';
 import * as serviceWorker from './serviceWorker';
-import background from './assets/zombie_back.jpeg';
 
 const container = document.getElementById('root');
 const root = ReactDOM.createRoot(container);

@@ -38,19 +38,24 @@ function App() {
     message: 'You have to input all parameters',
   });
 
-  const commChange = event =>
-    setAllValues({ ...allValues, [event.target.name]: event.target.value });
-
-  const data = {
-    zombies: [
-      { x: '1', y: '2' },
-      { x: '2', y: '3' },
-      { x: '3', y: '4' },
-    ],
-    creatures: [
-      { x: '1', y: '1' },
-      { x: '2', y: '2' },
-    ],
+  const commChange = event => {
+    let value = allValues.commands;
+    if (
+      event.nativeEvent.data === 'U' ||
+      event.nativeEvent.data === 'D' ||
+      event.nativeEvent.data === 'R' ||
+      event.nativeEvent.data === 'L'
+    ) {
+      setAllValues({
+        ...allValues,
+        commands: value + event.nativeEvent.data,
+      });
+    } else if (event.nativeEvent.data === null) {
+      setAllValues({
+        ...allValues,
+        commands: value.substring(0, value.length - 1),
+      });
+    }
   };
 
   const service = axios.create({
@@ -72,12 +77,9 @@ function App() {
     };
 
     if (checkValid(params)) {
-      mapRef.current.setMap(gridSize, data);
-      service.post('/createPosition', params).then(res => {
-        if (
-          !Object.prototype.isPrototypeOf(res) &&
-          Object.keys(res).length === 0
-        ) {
+      service.post('/zombie', params).then(res => {
+        if (res) {
+          mapRef.current.setMap(gridSize, res.data);
         } else {
           setVisible({
             isVisible: true,
@@ -121,11 +123,14 @@ function App() {
   }
 
   function checkDup(arr) {
-    const xList = arr.map(value => value.x);
-    const xSet = new Set(xList);
-    const yList = arr.map(value => value.y);
-    const ySet = new Set(yList);
-    if (xSet.size !== xList.length && ySet.size !== yList.length) {
+    const keys = ['x', 'y'];
+    const filtered = arr.filter(
+      (
+        s => o =>
+          (k => !s.has(k) && s.add(k))(keys.map(k => o[k]).join('|'))
+      )(new Set())
+    );
+    if (filtered.length !== arr.length) {
       return true;
     } else {
       return false;
@@ -275,8 +280,9 @@ function App() {
               );
             })}
             {/* Movement */}
-            <FormLabel>Movement List</FormLabel>
+            <FormLabel>Movement List(Must be U,D,R,L)</FormLabel>
             <Input
+              value={allValues.commands}
               name="commands"
               onChange={commChange}
               placeholder="Input a list of moves the zombies will make"
