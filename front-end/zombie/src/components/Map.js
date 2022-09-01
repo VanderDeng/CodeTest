@@ -90,9 +90,13 @@ const Map = forwardRef((props, ref) => {
   return (
     <div className="gridMap">
       <div>
-        <Heading as="h3" size="md" textAlign="center">
-          Position Map
-        </Heading>
+        {dimension !== 0 ? (
+          <Heading as="h3" size="md" textAlign="center">
+            Final Positions
+          </Heading>
+        ) : (
+          ''
+        )}
       </div>
       <div className="mapContainer">
         <div style={grid}>{position}</div>

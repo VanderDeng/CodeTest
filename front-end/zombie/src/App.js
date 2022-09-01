@@ -168,7 +168,7 @@ function App() {
               onChange={valueString => setGridSize(valueString)}
               value={gridSize}
               marginBottom={5}
-              min={0}
+              min={1}
               isRequired={true}
             >
               <NumberInputField />
