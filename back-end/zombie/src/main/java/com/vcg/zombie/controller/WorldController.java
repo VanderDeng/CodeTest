@@ -20,6 +20,7 @@ public class WorldController {
     @RequestMapping(value = "/zombie", method = RequestMethod.POST)
     public WorldOutput create(@RequestBody World world) {
         worldService.setWorld(world);
+        worldService.getZombies().clear();
         worldService.execute();
         return new WorldOutput(worldService.getZombies(),worldService.getWorld().getCreatures());
     }
