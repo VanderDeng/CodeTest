@@ -1,6 +1,6 @@
 import React, { StrictMode } from 'react';
 import * as ReactDOM from 'react-dom/client';
-import App from './pages/App';
+import App from './pages/Zombie';
 
 import reportWebVitals from './reportWebVitals';
 import * as serviceWorker from './serviceWorker';
