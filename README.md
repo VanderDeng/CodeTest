@@ -9,7 +9,7 @@ CourtCanva code test
 
 
 ### ScreenShot
-![Demo](screeshot.png)
+![Demo](/screenshot.png)
 ### Built With
 
 **Front-end**
