@@ -1,0 +1,10 @@
+<!--doesn't work currently-->
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="info" name="group1" packages="">
+    <Appenders>
+        <Console name="stdout" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss/zzz} %p %m%n"/>
+        </Console>
+    </Appenders>
+</Configuration>
+

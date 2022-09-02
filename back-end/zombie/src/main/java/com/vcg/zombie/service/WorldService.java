@@ -5,6 +5,8 @@ import com.vcg.zombie.entity.World;
 import com.vcg.zombie.entity.Zombie;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +17,9 @@ import java.util.List;
 public class WorldService {
 
     private World world;
-    private List<Zombie> zombies=new ArrayList<>();
+    private List<Zombie> zombies = new ArrayList<>();
+
+    private static Logger logger = LogManager.getLogger(WorldService.class);
 
     public List<Zombie> getZombies() {
         return zombies;
@@ -37,11 +41,11 @@ public class WorldService {
 
     private void printStatus(String s) {
         System.out.println();
-        System.out.println("---------" + s + "----------");
-        System.out.println("gridSize = " + world.gridSize);
-        getZombies().forEach(z -> System.out.println("zombie: " + z.getX() + " " + z.getY()));
-        world.getCreatures().forEach(h -> System.out.println("human: " + h.getX() + " " + h.getY()));
-        System.out.println("commands = " + world.getCommands());
+        logger.info("---------" + s + "----------");
+        logger.info("gridSize = " + world.gridSize);
+        getZombies().forEach(z -> logger.info("zombie position: " + z.getX() + " " + z.getY()));
+        world.getCreatures().forEach(h -> logger.info("human position: " + h.getX() + " " + h.getY()));
+        logger.info("commands = " + world.getCommands());
     }
 
     void zombieMove(char moveDirection) {
@@ -72,11 +76,16 @@ public class WorldService {
     private void zombieMoveCode(int moveX, int moveY) {
         getZombies().get(0).setX(Math.floorMod(getZombies().get(0).getX() + moveX, world.getGridSize()));
         getZombies().get(0).setY(Math.floorMod(getZombies().get(0).getY() + moveY, world.getGridSize()));
-        zombieMoveLog(getZombies().get(0).getX(), getZombies().get(0).getY());
+        zombieLog(getZombies().get(0).getX(), getZombies().get(0).getY(), "move");
     }
 
-    private void zombieMoveLog(int x, int y) {
-        System.out.printf("zombie 0 moved to (%s,%s)\n", x, y);
+    private void zombieLog(int x, int y, String type) {
+        String phrase = switch (type) {
+            case "move" -> "moved to";
+            case "infect" -> "infected creature at";
+            default -> "halted";
+        };
+        logger.info("zombie 0 {} ({},{})", phrase, x, y);
     }
 
     void zombieDetectHuman() {
@@ -93,10 +102,6 @@ public class WorldService {
     private void zombieInfect(int x, int y, Human human) {
         getZombies().add(new Zombie(x, y));
         world.getCreatures().remove(human);
-        zombieInfectLog(x, y);
-    }
-
-    private void zombieInfectLog(int x, int y) {
-        System.out.printf("zombie 0 infected creature at (%s,%s)\n", x, y);
+        zombieLog(x, y, "infect");
     }
 }
