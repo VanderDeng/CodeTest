@@ -1,4 +1,4 @@
-package com.su.accounting.exception;
+package com.vcg.zombie.exception;
 
 import lombok.Builder;
 import lombok.Data;

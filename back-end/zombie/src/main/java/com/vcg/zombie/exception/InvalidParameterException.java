@@ -1,4 +1,4 @@
-package com.su.accounting.exception;
+package com.vcg.zombie.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
