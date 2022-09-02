@@ -78,7 +78,7 @@ function Zombie() {
     if (checkValid(params)) {
       axios.post('/zombie', params).then(res => {
         if (res.name !== 'AxiosError') {
-          mapRef.current.setMap(gridSize, res.data);
+          mapRef.current.setMap(gridSize, res);
         } else {
           setVisible({
             isVisible: true,
