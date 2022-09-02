@@ -36,6 +36,7 @@ public class WorldService {
     }
 
     private void printStatus(String s) {
+        System.out.println();
         System.out.println("---------" + s + "----------");
         System.out.println("gridSize = " + world.gridSize);
         getZombies().forEach(z -> System.out.println("zombie: " + z.getX() + " " + z.getY()));
