@@ -55,7 +55,6 @@ const Map = forwardRef((props, ref) => {
         if (
           mapData.zombies
             .map(item => {
-              console.log();
               if (item.x === i && item.y === j) {
                 return true;
               } else {

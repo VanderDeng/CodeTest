@@ -21,7 +21,7 @@ import {
   AlertTitle,
 } from '@chakra-ui/react';
 import axios from 'axios';
-import Map from './components/Map';
+import Map from '../components/Map';
 
 function App() {
   const mapRef = useRef();
@@ -107,7 +107,7 @@ function App() {
         message: 'You have to input all parameters',
       });
       return false;
-    } else if (checkDup(params.creatures)) {
+    } else if (checkDup(params.creatures, params.zombie)) {
       setVisible({
         isVisible: true,
         message: 'Creatures position are duplicated',
@@ -122,15 +122,15 @@ function App() {
     }
   }
 
-  function checkDup(arr) {
+  function checkDup(cArr, zArr) {
     const keys = ['x', 'y'];
-    const filtered = arr.filter(
+    const filtered = cArr.concat(zArr).filter(
       (
         s => o =>
           (k => !s.has(k) && s.add(k))(keys.map(k => o[k]).join('|'))
       )(new Set())
     );
-    if (filtered.length !== arr.length) {
+    if (filtered.length !== cArr.concat(zArr).length) {
       return true;
     } else {
       return false;
@@ -185,7 +185,7 @@ function App() {
                 value={zombieX}
                 marginBottom={5}
                 min={0}
-                max={gridSize}
+                max={gridSize - 1}
               >
                 <NumberInputField />
                 <NumberInputStepper>
@@ -198,7 +198,7 @@ function App() {
                 value={zombieY}
                 marginBottom={5}
                 min={0}
-                max={gridSize}
+                max={gridSize - 1}
               >
                 <NumberInputField />
                 <NumberInputStepper>
@@ -215,7 +215,7 @@ function App() {
                 <Stack shouldWrapChildren direction="row" key={index}>
                   <NumberInput
                     min={0}
-                    max={gridSize}
+                    max={gridSize - 1}
                     value={x}
                     marginBottom={5}
                     onChange={valueAsString => {
@@ -235,7 +235,7 @@ function App() {
                   </NumberInput>
                   <NumberInput
                     min={0}
-                    max={gridSize}
+                    max={gridSize - 1}
                     value={y}
                     marginBottom={5}
                     onChange={valueAsString => {
