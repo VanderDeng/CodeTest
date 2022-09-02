@@ -1,6 +1,7 @@
 # Zombie-Apocalypse
 CourtCanva code test
 
+Project Link: [https://github.com/VanderDeng/Zombie-Apocalypse](https://github.com/VanderDeng/Zombie-Apocalypse)
 
 # Team Member
 - Vander vanderdeng@gmail.com
@@ -15,10 +16,12 @@ CourtCanva code test
 **Front-end**
 * [![React][React.js]][React-url]
 * https://chakra-ui.com/getting-started
+* axios
 
 **Back-end**
-* Sprint-boot
+* Spring Boot
 * Gradle
+* RESTful API
 
 
 
@@ -46,11 +49,6 @@ build Gradle project
 run the back-end project with run "ZombieApplication"
 
 
-
-<!-- CONTACT -->
-## Contact
-
-Project Link: [https://github.com/VanderDeng/Zombie-Apocalypse](https://github.com/VanderDeng/Zombie-Apocalypse)
 
 
 
