@@ -11,8 +11,8 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
 @Service
+@Data
 @RequiredArgsConstructor
 public class WorldService {
 

@@ -22,7 +22,11 @@ public class WorldController {
         worldService.setWorld(world);
         worldService.getZombies().clear();
         worldService.execute();
-        return new WorldOutput(worldService.getZombies(),worldService.getWorld().getCreatures());
+        return new WorldOutput(worldService.getZombies(), worldService.getWorld().getCreatures());
     }
 
+    @GetMapping("/z")
+    public String hello(String a) {
+        return "hello " + a;
+    }
 }
