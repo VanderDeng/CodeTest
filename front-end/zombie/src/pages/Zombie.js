@@ -20,11 +20,17 @@ import {
   AlertIcon,
   AlertTitle,
 } from '@chakra-ui/react';
-import axios from 'axios';
+import axios from '../common/axios';
 import Map from '../components/Map';
 
-function App() {
+function Zombie() {
   const mapRef = useRef();
+
+  const errorMsg = {
+    nullValue: 'You have to input all parameters',
+    dataDup: 'Creatures position are duplicated',
+    exceed: 'The coordinate value cannot exceed the dimension',
+  };
 
   const [gridSize, setGridSize] = React.useState('');
   const [zombieX, setZombieX] = React.useState('');
@@ -35,7 +41,7 @@ function App() {
   const [creatureList, setList] = React.useState([{ x: '', y: '' }]);
   const [visibleData, setVisible] = React.useState({
     isVisible: false,
-    message: 'You have to input all parameters',
+    message: errorMsg.nullValue,
   });
 
   const commChange = event => {
@@ -58,13 +64,6 @@ function App() {
     }
   };
 
-  const service = axios.create({
-    baseURL: 'http://localhost:8080',
-    timeout: 2000,
-    headers: { 'Access-Control-Allow-Origin': '*' },
-    withCredentials: false,
-  });
-
   function submitOpt() {
     let params = {
       gridSize: gridSize,
@@ -77,13 +76,13 @@ function App() {
     };
 
     if (checkValid(params)) {
-      service.post('/zombie', params).then(res => {
-        if (res) {
+      axios.post('/zombie', params).then(res => {
+        if (res.name !== 'AxiosError') {
           mapRef.current.setMap(gridSize, res.data);
         } else {
           setVisible({
             isVisible: true,
-            message: 'response data error',
+            message: res.message,
           });
         }
       });
@@ -104,13 +103,19 @@ function App() {
     ) {
       setVisible({
         isVisible: true,
-        message: 'You have to input all parameters',
+        message: errorMsg.nullValue,
       });
       return false;
     } else if (checkDup(params.creatures, params.zombie)) {
       setVisible({
         isVisible: true,
-        message: 'Creatures position are duplicated',
+        message: errorMsg.dataDup,
+      });
+      return false;
+    } else if (checkMax(params.creatures, params.zombie)) {
+      setVisible({
+        isVisible: true,
+        message: errorMsg.exceed,
       });
       return false;
     } else {
@@ -130,11 +135,16 @@ function App() {
           (k => !s.has(k) && s.add(k))(keys.map(k => o[k]).join('|'))
       )(new Set())
     );
-    if (filtered.length !== cArr.concat(zArr).length) {
-      return true;
-    } else {
-      return false;
-    }
+    return filtered.length !== cArr.concat(zArr).length;
+  }
+
+  function checkMax(cArr, zArr) {
+    return cArr
+      .concat(zArr)
+      .map(item => {
+        return item.x >= gridSize || item.y >= gridSize;
+      })
+      .includes(true);
   }
 
   React.useEffect(() => {
@@ -303,4 +313,4 @@ function App() {
   );
 }
 
-export default App;
+export default Zombie;
