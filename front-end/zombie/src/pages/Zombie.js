@@ -124,16 +124,14 @@ function Zombie() {
   }
 
   function checkEmpty(params) {
+    const isNull = ({ x, y }) => x === '' || y === '';
+
     return (
       !params.gridSize ||
       !params.commands ||
       params.zombie.x === '' ||
       params.zombie.y === '' ||
-      params.creatures
-        .map(element => {
-          return element.x !== '' && element.y !== '';
-        })
-        .includes(false)
+      params.creatures.some(isNull)
     );
   }
 
@@ -149,12 +147,8 @@ function Zombie() {
   }
 
   function checkExceed(cArr, zArr) {
-    return cArr
-      .concat(zArr)
-      .map(item => {
-        return item.x >= gridSize || item.y >= gridSize;
-      })
-      .includes(true);
+    const isExceed = ({ x, y }) => x >= gridSize || y >= gridSize;
+    return cArr.concat(zArr).some(isExceed);
   }
 
   React.useEffect(() => {
