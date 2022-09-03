@@ -3,7 +3,7 @@ package com.vcg.zombie.controller;
 import static org.mockito.Mockito.when;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vcg.zombie.entity.Human;
+import com.vcg.zombie.entity.Creature;
 import com.vcg.zombie.entity.World;
 import com.vcg.zombie.entity.Zombie;
 import com.vcg.zombie.service.WorldService;
@@ -57,7 +57,7 @@ class WorldControllerTest {
     @BeforeEach
     void setUp() {
         mockMvc = MockMvcBuilders.standaloneSetup(new WorldController(worldService)).build();
-        when(worldService.getWorld()).thenReturn(new World());
+        // when(worldService.getWorld()).thenReturn(new World());
     }
 
     @AfterEach
@@ -67,7 +67,7 @@ class WorldControllerTest {
 
     @Test
     void hello() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/z"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/hello"))
             .andExpect(MockMvcResultMatchers.status().is(200));
     }
 
@@ -83,32 +83,17 @@ class WorldControllerTest {
                             .content(new ObjectMapper().writeValueAsString(string2))
                             .accept(MediaType.APPLICATION_JSON))
             .andExpect(MockMvcResultMatchers.status().isCreated());
-
-
-        // MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
-        //                                           .post("/zombie")
-        //                                           .contentType(MediaType.APPLICATION_JSON)
-        //                                           .content(jsonString))
-        //                           .andReturn();
-        // System.out.println(mvcResult.getResponse().getContentAsString());
     }
 
     private World createWorldInstance() {
-        return new World(5, new Zombie(4, 5), List.of(new Human(1, 1), new Human(2, 3), new Human(3, 4)), "R");
-
-        // World testWorld = new World();
-        // testWorld.setZombie(new Zombie(1, 1));
-        // testWorld.setGridSize(10);
-        // testWorld.setCommands("RDRU");
-        // testWorld.setCreatures(List.of(new Human(2, 2), new Human(3, 3)));
-        // return testWorld;
+        return new World(5, new Zombie(4, 5), List.of(new Creature(1, 1), new Creature(2, 3), new Creature(3, 4)), "R");
     }
 
     Map<String, Object> createMap() {
         Map<String, Object> body = new HashMap<>();
         body.put("gridSize", "5");
         body.put("zombie", new Zombie(1, 1));
-        body.put("creatures", List.of(new Human(2, 2), new Human(3, 3)));
+        body.put("creatures", List.of(new Creature(2, 2), new Creature(3, 3)));
         body.put("commands", "RRRRRR");
         return body;
     }

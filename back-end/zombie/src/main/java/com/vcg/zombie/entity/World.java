@@ -19,7 +19,7 @@ public class World {
     private Zombie zombie;
 
     @NotBlank
-    private List<Human> creatures;
+    private List<Creature> creatures;
 
     @NotBlank
     private String commands;
