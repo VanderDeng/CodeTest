@@ -1,11 +1,12 @@
 package com.vcg.zombie.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+public class Creature extends AbstractCreature {
+    public Creature() {
+    }
 
-@Data
-public abstract class Creature {
-    int x;
-    int y;
+    public Creature(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
 
 }
