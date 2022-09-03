@@ -60,7 +60,7 @@ function Zombie() {
       });
   };
 
-  function submitOpt() {
+  const submitOpt = () => {
     let params = {
       gridSize: gridSize,
       zombie: {
@@ -73,9 +73,9 @@ function Zombie() {
 
     errorAlert(params);
     checkValid(params).checkValue && zombieApi(params);
-  }
+  };
 
-  function errorAlert(params) {
+  const errorAlert = params => {
     const { checkValue, checkMsg } = checkValid(params);
     checkValue
       ? setVisible({
@@ -86,9 +86,9 @@ function Zombie() {
           isVisible: true,
           message: checkMsg,
         });
-  }
+  };
 
-  function zombieApi(params) {
+  const zombieApi = params => {
     axios.post('/zombie', params).then(res => {
       if (res.name !== 'AxiosError') {
         mapRef.current.setMap(gridSize, res);
@@ -99,9 +99,9 @@ function Zombie() {
         });
       }
     });
-  }
+  };
 
-  function checkValid(params) {
+  const checkValid = params => {
     let checkResult = {
       checkValue: false,
       checkMsg: '',
@@ -121,23 +121,21 @@ function Zombie() {
       : '';
 
     return checkResult;
-  }
+  };
 
-  function checkEmpty(params) {
+  const checkEmpty = params => {
+    const isNull = ({ x, y }) => x === '' || y === '';
+
     return (
       !params.gridSize ||
       !params.commands ||
       params.zombie.x === '' ||
       params.zombie.y === '' ||
-      params.creatures
-        .map(element => {
-          return element.x !== '' && element.y !== '';
-        })
-        .includes(false)
+      params.creatures.some(isNull)
     );
-  }
+  };
 
-  function checkDup(cArr, zArr) {
+  const checkDup = (cArr, zArr) => {
     const keys = ['x', 'y'];
     const filtered = cArr.concat(zArr).filter(
       (
@@ -146,16 +144,12 @@ function Zombie() {
       )(new Set())
     );
     return filtered.length !== cArr.concat(zArr).length;
-  }
+  };
 
-  function checkExceed(cArr, zArr) {
-    return cArr
-      .concat(zArr)
-      .map(item => {
-        return item.x >= gridSize || item.y >= gridSize;
-      })
-      .includes(true);
-  }
+  const checkExceed = (cArr, zArr) => {
+    const isExceed = ({ x, y }) => x >= gridSize || y >= gridSize;
+    return cArr.concat(zArr).some(isExceed);
+  };
 
   React.useEffect(() => {
     setList(creatureList);
