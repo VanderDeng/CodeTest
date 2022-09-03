@@ -15,7 +15,7 @@ const Map = forwardRef((props, ref) => {
   const [dimension, setDimension] = useState(0);
   const [position, setPosition] = useState([]);
 
-  const block = {
+  const emptyBlock = {
     width: '100px',
     height: '100px',
     backgroundColor: 'white',
@@ -47,37 +47,18 @@ const Map = forwardRef((props, ref) => {
     lineHeight: '100px',
   };
 
-  const createMap = (num, mapData) => {
+  const createMap = (size, mapData) => {
     let arr = [];
-    for (let i = 0; i < num; i++) {
+    for (let i = 0; i < size; i++) {
       let temp = [];
-      for (let j = 0; j < num; j++) {
-        if (
-          mapData.zombies
-            .map(item => {
-              if (item.x === i && item.y === j) {
-                return true;
-              } else {
-                return false;
-              }
-            })
-            .includes(true)
-        ) {
+      for (let j = 0; j < size; j++) {
+        const matchPosition = ({ x, y }) => x === i && y === j;
+        if (mapData.zombies.some(matchPosition)) {
           temp.push(<div style={zombieStyle} key={i + ',' + j}></div>);
-        } else if (
-          mapData.creatures
-            .map(item => {
-              if (item.x === i && item.y === j) {
-                return true;
-              } else {
-                return false;
-              }
-            })
-            .includes(true)
-        ) {
+        } else if (mapData.creatures.some(matchPosition)) {
           temp.push(<div style={creatureStyle} key={i + ',' + j}></div>);
         } else {
-          temp.push(<div style={block} key={i + ',' + j}></div>);
+          temp.push(<div style={emptyBlock} key={i + ',' + j}></div>);
         }
       }
       arr.push(temp);

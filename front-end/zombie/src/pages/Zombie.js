@@ -27,8 +27,8 @@ function Zombie() {
   const mapRef = useRef();
 
   const errorMsg = {
-    nullValue: 'You have to input all parameters',
-    dataDup: 'Creatures position are duplicated',
+    empty: 'You have to input all parameters',
+    duplicate: 'Creatures position are duplicated',
     exceed: 'The coordinate value cannot exceed the dimension',
   };
 
@@ -41,27 +41,23 @@ function Zombie() {
   const [creatureList, setList] = React.useState([{ x: '', y: '' }]);
   const [visibleData, setVisible] = React.useState({
     isVisible: false,
-    message: errorMsg.nullValue,
+    message: errorMsg.empty,
   });
 
   const commChange = event => {
     let value = allValues.commands;
-    if (
-      event.nativeEvent.data === 'U' ||
-      event.nativeEvent.data === 'D' ||
-      event.nativeEvent.data === 'R' ||
-      event.nativeEvent.data === 'L'
-    ) {
+    const options = ['U', 'D', 'R', 'L'];
+    options.includes(event.nativeEvent.data) &&
       setAllValues({
         ...allValues,
         commands: value + event.nativeEvent.data,
       });
-    } else if (event.nativeEvent.data === null) {
+
+    !event.nativeEvent.data &&
       setAllValues({
         ...allValues,
         commands: value.substring(0, value.length - 1),
       });
-    }
   };
 
   function submitOpt() {
@@ -75,22 +71,60 @@ function Zombie() {
       ...allValues,
     };
 
-    if (checkValid(params)) {
-      axios.post('/zombie', params).then(res => {
-        if (res.name !== 'AxiosError') {
-          mapRef.current.setMap(gridSize, res);
-        } else {
-          setVisible({
-            isVisible: true,
-            message: res.message,
-          });
-        }
-      });
-    }
+    errorAlert(params);
+    checkValid(params).checkValue && zombieApi(params);
+  }
+
+  function errorAlert(params) {
+    const { checkValue, checkMsg } = checkValid(params);
+    checkValue
+      ? setVisible({
+          isVisible: false,
+          message: checkMsg,
+        })
+      : setVisible({
+          isVisible: true,
+          message: checkMsg,
+        });
+  }
+
+  function zombieApi(params) {
+    axios.post('/zombie', params).then(res => {
+      if (res.name !== 'AxiosError') {
+        mapRef.current.setMap(gridSize, res);
+      } else {
+        setVisible({
+          isVisible: true,
+          message: res.message,
+        });
+      }
+    });
   }
 
   function checkValid(params) {
-    if (
+    let checkResult = {
+      checkValue: false,
+      checkMsg: '',
+    };
+
+    checkResult.checkValue =
+      !checkEmpty(params) &&
+      !checkDup(params.creatures, params.zombie) &&
+      !checkExceed(params.creatures, params.zombie);
+
+    checkResult.checkMsg = checkEmpty(params)
+      ? errorMsg.empty
+      : checkDup(params.creatures, params.zombie)
+      ? errorMsg.duplicate
+      : checkExceed(params.creatures, params.zombie)
+      ? errorMsg.exceed
+      : '';
+
+    return checkResult;
+  }
+
+  function checkEmpty(params) {
+    return (
       !params.gridSize ||
       !params.commands ||
       params.zombie.x === '' ||
@@ -100,31 +134,7 @@ function Zombie() {
           return element.x !== '' && element.y !== '';
         })
         .includes(false)
-    ) {
-      setVisible({
-        isVisible: true,
-        message: errorMsg.nullValue,
-      });
-      return false;
-    } else if (checkDup(params.creatures, params.zombie)) {
-      setVisible({
-        isVisible: true,
-        message: errorMsg.dataDup,
-      });
-      return false;
-    } else if (checkMax(params.creatures, params.zombie)) {
-      setVisible({
-        isVisible: true,
-        message: errorMsg.exceed,
-      });
-      return false;
-    } else {
-      setVisible({
-        ...visibleData,
-        isVisible: false,
-      });
-      return true;
-    }
+    );
   }
 
   function checkDup(cArr, zArr) {
@@ -138,7 +148,7 @@ function Zombie() {
     return filtered.length !== cArr.concat(zArr).length;
   }
 
-  function checkMax(cArr, zArr) {
+  function checkExceed(cArr, zArr) {
     return cArr
       .concat(zArr)
       .map(item => {
