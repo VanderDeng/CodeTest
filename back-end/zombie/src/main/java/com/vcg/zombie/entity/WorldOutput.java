@@ -16,7 +16,7 @@ public class WorldOutput implements Serializable {
     private List<Zombie> zombies;
 
     @NotBlank
-    private List<Human> creatures;
+    private List<Creature> creatures;
 
 }
 
