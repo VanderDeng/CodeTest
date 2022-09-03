@@ -9,7 +9,7 @@ import com.vcg.zombie.util.CreateZombiesFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import java.util.ArrayList;
+import java.util.List;
 
 
 @RestController
@@ -22,7 +22,7 @@ public class WorldController {
     @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(value = "/zombie", method = RequestMethod.POST)
     public WorldOutput execute(@RequestBody World world) {
-        ArrayList<Zombie> zombies = CreateZombiesFactory.CreateZombies();
+        List<Zombie> zombies = CreateZombiesFactory.CreateZombies();
         return worldService.execute(world, zombies);
     }
 
