@@ -83,25 +83,10 @@ class WorldControllerTest {
                             .content(new ObjectMapper().writeValueAsString(string2))
                             .accept(MediaType.APPLICATION_JSON))
             .andExpect(MockMvcResultMatchers.status().isCreated());
-
-
-        // MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
-        //                                           .post("/zombie")
-        //                                           .contentType(MediaType.APPLICATION_JSON)
-        //                                           .content(jsonString))
-        //                           .andReturn();
-        // System.out.println(mvcResult.getResponse().getContentAsString());
     }
 
     private World createWorldInstance() {
         return new World(5, new Zombie(4, 5), List.of(new Creature(1, 1), new Creature(2, 3), new Creature(3, 4)), "R");
-
-        // World testWorld = new World();
-        // testWorld.setZombie(new Zombie(1, 1));
-        // testWorld.setGridSize(10);
-        // testWorld.setCommands("RDRU");
-        // testWorld.setCreatures(List.of(new Human(2, 2), new Human(3, 3)));
-        // return testWorld;
     }
 
     Map<String, Object> createMap() {
