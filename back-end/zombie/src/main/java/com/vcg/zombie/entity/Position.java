@@ -2,10 +2,13 @@ package com.vcg.zombie.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Data
+@NoArgsConstructor
 @AllArgsConstructor
+@Data
 public class Position {
-    private int x;
-    private int y;
+    protected int x;
+    protected int y;
+
 }

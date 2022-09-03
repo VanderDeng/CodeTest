@@ -1,6 +1,7 @@
 package com.vcg.zombie.entity;
 
-public class Creature extends AbstractCreature {
+public class Creature extends Position {
+
     public Creature() {
     }
 
