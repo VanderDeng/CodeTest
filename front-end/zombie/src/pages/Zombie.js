@@ -77,15 +77,10 @@ function Zombie() {
 
   const errorAlert = params => {
     const { checkValue, checkMsg } = checkValid(params);
-    checkValue
-      ? setVisible({
-          isVisible: false,
-          message: checkMsg,
-        })
-      : setVisible({
-          isVisible: true,
-          message: checkMsg,
-        });
+    setVisible({
+      isVisible: !checkValue,
+      message: checkMsg,
+    });
   };
 
   const zombieApi = params => {
@@ -112,13 +107,10 @@ function Zombie() {
       !checkDup(params.creatures, params.zombie) &&
       !checkExceed(params.creatures, params.zombie);
 
-    checkResult.checkMsg = checkEmpty(params)
-      ? errorMsg.empty
-      : checkDup(params.creatures, params.zombie)
-      ? errorMsg.duplicate
-      : checkExceed(params.creatures, params.zombie)
-      ? errorMsg.exceed
-      : '';
+    checkResult.checkMsg =
+      (checkEmpty(params) && errorMsg.empty) ||
+      (checkDup(params.creatures, params.zombie) && errorMsg.duplicate) ||
+      (checkExceed(params.creatures, params.zombie) && errorMsg.exceed);
 
     return checkResult;
   };
