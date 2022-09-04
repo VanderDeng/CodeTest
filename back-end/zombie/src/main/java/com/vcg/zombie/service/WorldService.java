@@ -9,18 +9,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class WorldService {
 
     private static final Logger logger = LogManager.getLogger(WorldService.class);
-
-    private final Map<Character, Position> positionOffsetMap =
-        Map.of(Commands.RIGHT.getAbbreviation(), new Position(1, 0),
-            Commands.LEFT.getAbbreviation(), new Position(-1, 0),
-            Commands.UP.getAbbreviation(), new Position(0, -1),
-            Commands.DOWN.getAbbreviation(), new Position(0, 1));
 
     public WorldOutput execute(World world, List<Zombie> zombies) {
         zombies.add(world.getZombie());
@@ -47,11 +40,13 @@ public class WorldService {
     }
 
     private void zombieMove(World world, char moveDirection) {
-        if (positionOffsetMap.get(moveDirection) == null) {
-            logger.info("zombie 0 halted");
-        } else {
-            zombieMoveByPosition(world, positionOffsetMap.get(moveDirection));
-        }
+        switch (moveDirection) {
+            case 'R' -> zombieMoveByPosition(world, new Position(1, 0));
+            case 'L' -> zombieMoveByPosition(world, new Position(-1, 0));
+            case 'U' -> zombieMoveByPosition(world, new Position(0, -1));
+            case 'D' -> zombieMoveByPosition(world, new Position(0, 1));
+            default -> logger.info("zombie 0 halted");
+        };
     }
 
     private void zombieMoveByPosition(World world, Position position) {
@@ -85,19 +80,4 @@ public class WorldService {
         world.getCreatures().remove(creature);
         zombieLog(x, y, "infect");
     }
-}
-
-enum Commands {
-    LEFT('L'), RIGHT('R'), UP('U'), DOWN('D');
-
-    Commands(Character abbreviation) {
-
-        this.abbreviation = abbreviation;
-    }
-
-    public Character getAbbreviation() {
-        return abbreviation;
-    }
-
-    final Character abbreviation;
 }
