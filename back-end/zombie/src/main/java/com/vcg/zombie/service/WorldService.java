@@ -16,43 +16,11 @@ public class WorldService {
 
     private static final Logger logger = LogManager.getLogger(WorldService.class);
 
-    public enum Commands {
-        LEFT {
-            @Override
-            public Position getCommand() {
-                return new Position(-1, 0);
-            }
-        },
-        RIGHT {
-            @Override
-            public Position getCommand() {
-                return new Position(1, 0);
-            }
-        },
-        UP {
-            @Override
-            public Position getCommand() {
-                return new Position(0, -1);
-            }
-        },
-        DOWN {
-            @Override
-            public Position getCommand() {
-                return new Position(0, 1);
-            }
-        };
-
-        public Position getCommand() {
-            return null;
-        }
-    }
-
-    private final Map<Character, Position> commandFromChar = Map.ofEntries(
-        Map.entry('R', Commands.RIGHT.getCommand()),
-        Map.entry('L', Commands.LEFT.getCommand()),
-        Map.entry('U', Commands.UP.getCommand()),
-        Map.entry('D', Commands.DOWN.getCommand())
-    );
+    private final Map<Character, Position> positionOffsetMap =
+        Map.of(Commands.RIGHT.getAbbreviation(), new Position(1, 0),
+            Commands.LEFT.getAbbreviation(), new Position(-1, 0),
+            Commands.UP.getAbbreviation(), new Position(0, -1),
+            Commands.DOWN.getAbbreviation(), new Position(0, 1));
 
     public WorldOutput execute(World world, List<Zombie> zombies) {
         zombies.add(world.getZombie());
@@ -79,10 +47,10 @@ public class WorldService {
     }
 
     private void zombieMove(World world, char moveDirection) {
-        if (commandFromChar.get(moveDirection) == null) {
+        if (positionOffsetMap.get(moveDirection) == null) {
             logger.info("zombie 0 halted");
         } else {
-            zombieMoveByPosition(world, commandFromChar.get(moveDirection));
+            zombieMoveByPosition(world, positionOffsetMap.get(moveDirection));
         }
     }
 
@@ -117,4 +85,19 @@ public class WorldService {
         world.getCreatures().remove(creature);
         zombieLog(x, y, "infect");
     }
+}
+
+enum Commands {
+    LEFT('L'), RIGHT('R'), UP('U'), DOWN('D');
+
+    Commands(Character abbreviation) {
+
+        this.abbreviation = abbreviation;
+    }
+
+    public Character getAbbreviation() {
+        return abbreviation;
+    }
+
+    final Character abbreviation;
 }
