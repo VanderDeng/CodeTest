@@ -13,7 +13,7 @@ import java.util.List;
 public class World {
 
     @NotBlank
-    public int gridSize;
+    private int gridSize;
 
     @NotBlank
     private Zombie zombie;

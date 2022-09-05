@@ -1,7 +1,5 @@
 package com.vcg.zombie.controller;
 
-import static org.mockito.Mockito.when;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vcg.zombie.entity.Creature;
 import com.vcg.zombie.entity.Position;
@@ -33,27 +31,35 @@ class WorldControllerTest {
 
     String jsonString = """
         {
-            "gridSize": "5",
-            "zombie": {
-                "x": "4",
-                "y": "5"
-            },
-            "creatures": [
-                {
-                    "x": "1",
-                    "y": "1"
-                },
-                {
-                    "x": "2",
-                    "y": "3"
-                },
-                {
-                    "x": "3",
-                    "y": "4"
-                }
-            ],
-            "commands": "1"
-        }""";
+           "gridSize": "5",
+           "zombie": {
+             "position": {
+               "x": "4",
+               "y": "5"
+             }
+           },
+           "creatures": [
+             {
+               "position": {
+                 "x": "1",
+                 "y": "1"
+               }
+             },
+             {
+               "position": {
+                 "x": "2",
+                 "y": "3"
+               }
+             },
+             {
+               "position": {
+                 "x": "3",
+                 "y": "4"
+               }
+             }
+           ],
+           "commands": "RD"
+         }""";
 
     @BeforeEach
     void setUp() {
