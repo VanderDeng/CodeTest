@@ -1,11 +1,13 @@
 package com.vcg.zombie.exception;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * Accounting Service Exception.
  */
 @Data
+@EqualsAndHashCode(callSuper=false)
 public class ServiceException extends RuntimeException {
     private int statusCode;
     private String errorCode;
