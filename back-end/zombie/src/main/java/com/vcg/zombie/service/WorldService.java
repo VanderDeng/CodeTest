@@ -34,8 +34,8 @@ public class WorldService {
         System.out.println();
         logger.info("---------" + s + "----------");
         logger.info("gridSize = " + world.gridSize);
-        zombies.forEach(z -> logger.info("zombie position: " + z.getX() + " " + z.getY()));
-        world.getCreatures().forEach(h -> logger.info("human position: " + h.getX() + " " + h.getY()));
+        zombies.forEach(z -> logger.info("zombie position: " + z.getPosition().getX() + " " + z.getPosition().getY()));
+        world.getCreatures().forEach(h -> logger.info("human position: " + h.getPosition().getX() + " " + h.getPosition().getY()));
         logger.info("commands = " + world.getCommands());
     }
 
@@ -50,9 +50,9 @@ public class WorldService {
     }
 
     private void zombieMoveByPosition(World world, Position position) {
-        world.getZombie().setX(Math.floorMod(world.getZombie().getX() + position.getX(), world.getGridSize()));
-        world.getZombie().setY(Math.floorMod(world.getZombie().getY() + position.getY(), world.getGridSize()));
-        zombieLog(world.getZombie().getX(), world.getZombie().getY(), "move");
+        world.getZombie().getPosition().setX(Math.floorMod(world.getZombie().getPosition().getX() + position.getX(), world.getGridSize()));
+        world.getZombie().getPosition().setY(Math.floorMod(world.getZombie().getPosition().getY() + position.getY(), world.getGridSize()));
+        zombieLog(world.getZombie().getPosition().getX(), world.getZombie().getPosition().getY(), "move");
     }
 
     private void zombieLog(int x, int y, String type) {
@@ -65,10 +65,10 @@ public class WorldService {
     }
 
     void zombieDetectCreature(World world, List<Zombie> zombies) {
-        int x = world.getZombie().getX();
-        int y = world.getZombie().getY();
+        int x = world.getZombie().getPosition().getX();
+        int y = world.getZombie().getPosition().getY();
         for (Creature creature : world.getCreatures()) {
-            if (creature.getX() == x && creature.getY() == y) {
+            if (creature.getPosition().getX() == x && creature.getPosition().getY() == y) {
                 zombieInfect(world, zombies, x, y, creature);
                 break;
             }
@@ -76,7 +76,7 @@ public class WorldService {
     }
 
     private void zombieInfect(World world, List<Zombie> zombies, int x, int y, Creature creature) {
-        zombies.add(new Zombie(x, y));
+        zombies.add(new Zombie(new Position(x, y)));
         world.getCreatures().remove(creature);
         zombieLog(x, y, "infect");
     }

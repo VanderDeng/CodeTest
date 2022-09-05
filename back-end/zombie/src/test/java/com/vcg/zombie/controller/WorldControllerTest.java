@@ -4,6 +4,7 @@ import static org.mockito.Mockito.when;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vcg.zombie.entity.Creature;
+import com.vcg.zombie.entity.Position;
 import com.vcg.zombie.entity.World;
 import com.vcg.zombie.entity.Zombie;
 import com.vcg.zombie.service.WorldService;
@@ -86,14 +87,15 @@ class WorldControllerTest {
     }
 
     private World createWorldInstance() {
-        return new World(5, new Zombie(4, 5), List.of(new Creature(1, 1), new Creature(2, 3), new Creature(3, 4)), "R");
+        return new World(5, new Zombie(new Position(4, 5)),
+            List.of(new Creature(new Position(1, 1)), new Creature(new Position(2, 3)), new Creature(new Position(3, 4))), "R");
     }
 
     Map<String, Object> createMap() {
         Map<String, Object> body = new HashMap<>();
         body.put("gridSize", "5");
-        body.put("zombie", new Zombie(1, 1));
-        body.put("creatures", List.of(new Creature(2, 2), new Creature(3, 3)));
+        body.put("zombie", new Zombie(new Position(1, 1)));
+        body.put("creatures", List.of(new Creature(new Position(2, 2)), new Creature(new Position(3, 3))));
         body.put("commands", "RRRRRR");
         return body;
     }
