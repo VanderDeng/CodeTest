@@ -11,17 +11,9 @@ import org.apache.logging.log4j.LogManager;
 @AllArgsConstructor
 @Data
 public class Zombie {
-    Position position = new Position();
+    private Position position;
 
-    @JsonAnySetter
-    public void getXYFromJson(String key, String value) {
-        if ("x".equals(key)) {
-            position.setX(Integer.parseInt(value));
-        } else if ("y".equals(key)) {
-            position.setY(Integer.parseInt(value));
-        } else {
-            LogManager.getLogger(Zombie.class).info("met abnormal value: " + value);
-        }
+    public void move(Position offset, int gridSize) {
+        this.position = this.position.move(offset, gridSize);
     }
-
 }

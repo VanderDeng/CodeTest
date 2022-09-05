@@ -22,8 +22,7 @@ public class WorldController {
     @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(value = "/zombie", method = RequestMethod.POST)
     public WorldOutput execute(@RequestBody World world) {
-        List<Zombie> zombies = CreateZombiesFactory.CreateZombies();
-        return worldService.execute(world, zombies);
+        return worldService.execute(world);
     }
 
     @GetMapping("/hello")
